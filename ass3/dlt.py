@@ -2,21 +2,18 @@ import numpy as np
 import math
 import random
 
-#examples is a matrix where each row is an example, and each column is an attribute
-#attributes vary from 0-6 (1-7)
-#parent_examples
-#probability er gangene utfallet stemmer per verdi for attributen, og saa summert
+#importing numpoy, math and random
 
-
+#defining a class "Tree"
 class Tree:
 	def __init__(self, att_type):
 		self.att=att_type #what attribute does the tree split on
 		self.subtrees={} #subtrees as dictionary, where the keys will be the different attribute values
 
 
-test_matrix=np.full([28,8],-1,int)
-examples=np.full([100,8],-1,int)
-attributes=[i for i in range(0,np.size(examples,1)-1)]
+test_matrix=np.full([28,8],-1,int) #matrix that will store data from "test.txt"
+examples=np.full([100,8],-1,int) #matrix that will store data from "training.txt"
+attributes=[i for i in range(0,np.size(examples,1)-1)] #array to store the different attributes (0-6)
 
 
 
@@ -171,27 +168,22 @@ def valid(matrix):
 
 #The decision tree learning-algorithm
 def decision_tree_learning(examples, attributes_list, parent_examples, random_importance):
-	print("list: ", attributes_list)
-	attributes=list(attributes_list)
+	attributes=list(attributes_list) #make a shallow copy of attribute_list as not to change the global variable
 	if (not valid(examples)):
-		print("examples not valid")
 		return Tree(plurality_value(parent_examples))
 	elif (same_classification(examples)>0):
-		print("same classification")
 		return Tree(same_classification(examples))
 	elif (not attributes):
-		print("no attributes")
 		return Tree(plurality_value(examples))
 	else:
 		if (random_importance):
 			A=importance_random(attributes)
-			print("A_random:\t", A) #printing chosen attribute to split on
+			#print("A_random:\t", A) #printing chosen attribute to split on
 		else:
 			A=importance_infogain(attributes, examples)
-			print("A_infogain:\t", A) #printing chosen attribute to split on
+			#print("A_infogain:\t", A) #printing chosen attribute to split on
 		tree=Tree(A)
 		attributes.remove(A)
-		print("attributes: ", attributes)
 		for vk in range(1,3):
 			new_examples=[]
 			for example in examples:
@@ -245,6 +237,7 @@ def decision_tree_test(tree, tests):
 			num_failed+=1
 	print("Out of ", num_correct+num_failed, " tests: ", num_correct, " were correct, and ", num_failed, "failed.")
 
+
 def main():
 	make_testmatrix() #making the test_matrix with data from "test.txt"
 	make_examplesmatrix() #making the examples matrix with data from "training.txt"
@@ -252,12 +245,22 @@ def main():
 	tree2=decision_tree_learning(examples, attributes,[],False) #building a tree with non-random importance of attributes.
 	print("---Decision tree learning when importance is COMPUTED---")
 	decision_tree_test(tree2, test_matrix)
+	#possible to test the direct tester below
 	#decision_tree_test_direct(tree2, test_matrix)
-	tree1=decision_tree_learning(examples, attributes,[],True)
+	tree1=decision_tree_learning(examples, attributes,[],True) #builing tree with random importance of attributes
 	print("---Decision tree learning when importance is RANDOM---")
 	decision_tree_test(tree1, test_matrix)
+	#possible to test the direct tester below
 	#decision_tree_test_direct(tree1, test_matrix)
+	#to print classified matrix with attribute_values as well as computed classification:
+	#print(classify(tree1,test_matrix)) #for Information Gain -based learner
+	#print(classify(tree2, test_matrix)) #for random - based learner
+	#I've implemented out-commented prints to check what attributes
+	#are chosen to split on within the decision_tree_learning function
+	#it that is of interest to check
 
+
+	#Would really appreciate some feedback on how this could have been done better
 
 
 main()
