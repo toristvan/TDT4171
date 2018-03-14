@@ -113,7 +113,8 @@ def Gain(att_type, matrix):
 	return (B(q)-Remainder(att_type,matrix))
 
 #computing attribute with highest gain -> best attribute to split on
-def importance_infogain(attributes, matrix):
+def importance_infogain(attributes_list, matrix):
+	attributes=list(attributes_list)
 	att_type_max=0
 	gain_max=-1
 	for att_type in attributes:
@@ -125,7 +126,8 @@ def importance_infogain(attributes, matrix):
 	return att_type_max
 
 #giving each attribute random importance, and then chooses the best to split on
-def importance_random(attributes):
+def importance_random(attributes_list):
+	attributes=list(attributes_list)
 	att_type_max=0
 	gain_max=-1
 	for att_type in attributes:
@@ -168,12 +170,17 @@ def valid(matrix):
 	return True
 
 #The decision tree learning-algorithm
-def decision_tree_learning(examples, attributes, parent_examples, random_importance):
+def decision_tree_learning(examples, attributes_list, parent_examples, random_importance):
+	print("list: ", attributes_list)
+	attributes=list(attributes_list)
 	if (not valid(examples)):
+		print("examples not valid")
 		return Tree(plurality_value(parent_examples))
 	elif (same_classification(examples)>0):
+		print("same classification")
 		return Tree(same_classification(examples))
 	elif (not attributes):
+		print("no attributes")
 		return Tree(plurality_value(examples))
 	else:
 		if (random_importance):
@@ -184,6 +191,7 @@ def decision_tree_learning(examples, attributes, parent_examples, random_importa
 			print("A_infogain:\t", A) #printing chosen attribute to split on
 		tree=Tree(A)
 		attributes.remove(A)
+		print("attributes: ", attributes)
 		for vk in range(1,3):
 			new_examples=[]
 			for example in examples:
@@ -240,12 +248,15 @@ def decision_tree_test(tree, tests):
 def main():
 	make_testmatrix() #making the test_matrix with data from "test.txt"
 	make_examplesmatrix() #making the examples matrix with data from "training.txt"
-	tree=decision_tree_learning(examples, attributes,[],False) #building a tree with non-random importance of attributes.
+
+	tree2=decision_tree_learning(examples, attributes,[],False) #building a tree with non-random importance of attributes.
 	print("---Decision tree learning when importance is COMPUTED---")
-	decision_tree_test(tree, test_matrix)
-	tree=decision_tree_learning(examples, attributes,[],True)
+	decision_tree_test(tree2, test_matrix)
+	#decision_tree_test_direct(tree2, test_matrix)
+	tree1=decision_tree_learning(examples, attributes,[],True)
 	print("---Decision tree learning when importance is RANDOM---")
-	decision_tree_test(tree, test_matrix)
+	decision_tree_test(tree1, test_matrix)
+	#decision_tree_test_direct(tree1, test_matrix)
 
 
 
