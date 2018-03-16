@@ -172,16 +172,17 @@ def decision_tree_learning(examples, attributes_list, parent_examples, random_im
 	if (not valid(examples)):
 		return Tree(plurality_value(parent_examples))
 	elif (same_classification(examples)>0):
+		print("same classifcation")
 		return Tree(same_classification(examples))
 	elif (not attributes):
 		return Tree(plurality_value(examples))
 	else:
 		if (random_importance):
 			A=importance_random(attributes)
-			#print("A_random:\t", A) #printing chosen attribute to split on
+			print("A_random:\t", A) #printing chosen attribute to split on
 		else:
 			A=importance_infogain(attributes, examples)
-			#print("A_infogain:\t", A) #printing chosen attribute to split on
+			print("A_infogain:\t", A) #printing chosen attribute to split on
 		tree=Tree(A)
 		attributes.remove(A)
 		for vk in range(1,3):
