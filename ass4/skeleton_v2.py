@@ -41,9 +41,9 @@ def plot_L_simple():
                 w1_min=w1[i,j]
                 w2_min=w2[i,j]
 
-    print("w1_min: ", w1_min)
-    print("w2_min: ", w2_min)
-    print("loss_min: ", loss_min)
+    print "w1_min: ", round(w1_min,10)
+    print "w2_min: ", round(w2_min,10)
+    print "loss_min: ", round(loss_min,10)
 
     fig=plt.figure()
     axes=plt.axes(projection='3d')
@@ -87,10 +87,9 @@ def plot_L_simple_grad_descent(niter):
 
     print('Iterations:', niter)
     for i in range(len(learn_rates)):
-        print('Times:', i)
-        print('Learn rates:', learn_rates[i])
-        print('Weights:', weights[i])
-        print('L_simple:', loss_simple[i])
+        print 'Learn rate:', learn_rates[i]
+        print 'Weights minimizing L_simple:', weights[i]
+        print 'L_simple_min:', loss_simple[i]
     plt.semilogx(learn_rates,loss_simple, 'ro')
     plt.grid(True)
     plt.xlabel('$\eta$')
@@ -131,10 +130,10 @@ def batch_train_w(x_train,y_train,learn_rate=0.1,niter=1000):
             update_grad=0.0
             for n in xrange(num_n):
                 update_grad+= der_Ln(w,x_train[n],y_train[n],i)# done # something needs to be done here (-logistic_wx(w,x_train[n])+y_train[n])
-            w[i] = w[i] + learn_rate * update_grad/num_n
+            w[i] = w[i] - learn_rate * update_grad/num_n
     return w
 
-def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,niter=1000):
+def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,niter=100):
     plt.figure()
     #train data
     data = pd.DataFrame(np.hstack((xtrain,ytrain.reshape(xtrain.shape[0],1))),columns=['x','y','lab'])
@@ -153,13 +152,14 @@ def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,nite
     data_test = pd.DataFrame(np.hstack((xtest,y_est.reshape(xtest.shape[0],1))),columns=['x','y','lab'])
     data_test.plot(kind='scatter',x='x',y='y',c='lab',ax=ax,cmap=cm.coolwarm,edgecolors='black')
     print "error=",np.mean(error)
-    print "time=", round(t_end-t_start,10)
+    print "time=", round(t_end-t_start,5)
     print "iterations=", niter
     print "learn rate=", learn_rate
     return w
 
 def main():
-    #plot_L_simple_grad_descent(10000)
+    #plot_L_simple()
+    plot_L_simple_grad_descent(1000)
     #gradient_descent(10,1000)
 
     #small nonsep
@@ -185,7 +185,7 @@ def main():
     y_train_big_sep=np.loadtxt("data_big_separable_train.csv", delimiter='\t', usecols=(2, ))
     x_test_big_sep=np.loadtxt("data_big_separable_test.csv", delimiter='\t', usecols=(0,1))
     y_test_big_sep=np.loadtxt("data_big_separable_test.csv", delimiter='\t', usecols=(2, ))
-
+    '''
     #train and plot
     print "\nData: big separable"
     print "Training method: stochastic"
@@ -194,7 +194,7 @@ def main():
     print "\nData: big separable"
     print "Training method: batch" #noe som skurrer
     train_and_plot(x_train_big_sep, y_train_big_sep, x_test_big_sep, y_test_big_sep, batch_train_w)
-    '''
+
     ##
     print "\nData: small separable"
     print "Training method: stochastic"
