@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
+import time
 
 #standard logistic function to map the inner product w^T * x, and classify
 #start
@@ -61,8 +62,8 @@ def grad(w):
 
 #task 1.3
 def gradient_descent(learn_rate, niter):
-    w_1=0 #evt random
-    w_2=0
+    w_1=random.uniform(-6.0,6.0)
+    w_2=random.uniform(-6.0,6.0)
     for i in range(niter):
         L_w1, L_w2=grad([w_1,w_2])
         w_1=w_1 - (learn_rate*L_w1)
@@ -99,7 +100,7 @@ def plot_L_simple_grad_descent(niter):
 #task 2.1 & 2.2
 def der_Ln(w,x_n,y_n, index):
     sigma=logistic_wx(w,x_n)
-    return x[index]*sigma*(1-sigma)*(sigma-y_n)
+    return x_n[index]*sigma*(1-sigma)*(sigma-y_n)
 
 #x_train = [number_of_samples,number_of_features] = number_of_samples x \in R^number_of_features
 def stochast_train_w(x_train,y_train,learn_rate=0.1,niter=1000):
@@ -133,14 +134,16 @@ def batch_train_w(x_train,y_train,learn_rate=0.1,niter=1000):
             w[i] = w[i] + learn_rate * update_grad/num_n
     return w
 
-def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,niter=10):
+def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,niter=1000):
     plt.figure()
     #train data
     data = pd.DataFrame(np.hstack((xtrain,ytrain.reshape(xtrain.shape[0],1))),columns=['x','y','lab'])
     ax=data.plot(kind='scatter',x='x',y='y',c='lab',cmap=cm.copper,edgecolors='black')
 
     #train weights
+    t_start=time.time()
     w=training_method(xtrain,ytrain,learn_rate,niter)
+    t_end=time.time()
     error=[]
     y_est=[]
     for i in xrange(len(ytest)):
@@ -150,33 +153,74 @@ def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,nite
     data_test = pd.DataFrame(np.hstack((xtest,y_est.reshape(xtest.shape[0],1))),columns=['x','y','lab'])
     data_test.plot(kind='scatter',x='x',y='y',c='lab',ax=ax,cmap=cm.coolwarm,edgecolors='black')
     print "error=",np.mean(error)
+    print "time=", round(t_end-t_start,10)
+    print "iterations=", niter
+    print "learn rate=", learn_rate
     return w
 
 def main():
-    plot_L_simple_grad_descent(10000)
+    #plot_L_simple_grad_descent(10000)
+    #gradient_descent(10,1000)
 
     #small nonsep
     x_train_small_nonsep=np.loadtxt("data_small_nonsep_train.csv", delimiter='\t', usecols=(0,1))
-    y_train_small_nonsep=np.loadtxt("data_small_nonsep_train.csv", delimiter='\t', usecols=(2))
+    y_train_small_nonsep=np.loadtxt("data_small_nonsep_train.csv", delimiter='\t', usecols=(2,))
     x_test_small_nonsep=np.loadtxt("data_small_nonsep_test.csv", delimiter='\t', usecols=(0,1))
-    y_test_small_nonsep=np.loadtxt("data_small_nonsep_test.csv", delimiter='\t', usecols=(2))
+    y_test_small_nonsep=np.loadtxt("data_small_nonsep_test.csv", delimiter='\t', usecols=(2,))
 
     #small sep
-    x_train_small_sep=np.loadtxt("data_small_seperable_train.csv", delimiter='\t', usecols=(0,1))
-    y_train_small_sep=np.loadtxt("data_small_seperable_train.csv", delimiter='\t', usecols=(2))
-    x_test_small_sep=np.loadtxt("data_small_seperable_test.csv", delimiter='\t', usecols=(0,1))
-    y_test_small_sep=np.loadtxt("data_small_seperable_test.csv", delimiter='\t', usecols=(2))
+    x_train_small_sep=np.loadtxt("data_small_separable_train.csv", delimiter='\t', usecols=(0,1))
+    y_train_small_sep=np.loadtxt("data_small_separable_train.csv", delimiter='\t', usecols=(2, ))
+    x_test_small_sep=np.loadtxt("data_small_separable_test.csv", delimiter='\t', usecols=(0,1))
+    y_test_small_sep=np.loadtxt("data_small_separable_test.csv", delimiter='\t', usecols=(2, ))
 
     #big nonsep
     x_train_big_nonsep=np.loadtxt("data_big_nonsep_train.csv", delimiter='\t', usecols=(0,1))
-    y_train_big_nonsep=np.loadtxt("data_big_nonsep_train.csv", delimiter='\t', usecols=(2))
+    y_train_big_nonsep=np.loadtxt("data_big_nonsep_train.csv", delimiter='\t', usecols=(2, ))
     x_test_big_nonsep=np.loadtxt("data_big_nonsep_test.csv", delimiter='\t', usecols=(0,1))
-    y_test_big_nonsep=np.loadtxt("data_big_nonsep_test.csv", delimiter='\t', usecols=(2))
+    y_test_big_nonsep=np.loadtxt("data_big_nonsep_test.csv", delimiter='\t', usecols=(2, ))
 
     #big sep
-    x_train_big_sep=np.loadtxt("data_big_seperable_train.csv", delimiter='\t', usecols=(0,1))
-    y_train_big_sep=np.loadtxt("data_big_seperable_train.csv", delimiter='\t', usecols=(2))
-    x_test_big_sep=np.loadtxt("data_big_seperable_test.csv", delimiter='\t', usecols=(0,1))
-    y_test_big_sep=np.loadtxt("data_big_seperable_test.csv", delimiter='\t', usecols=(2))
+    x_train_big_sep=np.loadtxt("data_big_separable_train.csv", delimiter='\t', usecols=(0,1))
+    y_train_big_sep=np.loadtxt("data_big_separable_train.csv", delimiter='\t', usecols=(2, ))
+    x_test_big_sep=np.loadtxt("data_big_separable_test.csv", delimiter='\t', usecols=(0,1))
+    y_test_big_sep=np.loadtxt("data_big_separable_test.csv", delimiter='\t', usecols=(2, ))
+
+    #train and plot
+    print "\nData: big separable"
+    print "Training method: stochastic"
+    train_and_plot(x_train_big_sep, y_train_big_sep, x_test_big_sep, y_test_big_sep, stochast_train_w)
+
+    print "\nData: big separable"
+    print "Training method: batch" #noe som skurrer
+    train_and_plot(x_train_big_sep, y_train_big_sep, x_test_big_sep, y_test_big_sep, batch_train_w)
+    '''
+    ##
+    print "\nData: small separable"
+    print "Training method: stochastic"
+    train_and_plot(x_train_small_sep, y_train_small_sep, x_test_small_sep, y_test_small_sep, stochast_train_w)
+
+    print "\nData: small separable"
+    print "Training method: batch"
+    train_and_plot(x_train_small_sep, y_train_small_sep, x_test_small_sep, y_test_small_sep, batch_train_w)
+
+    ##
+    print "\nData: big non-separable"
+    print "Training method: stochastic"
+    train_and_plot(x_train_big_nonsep, y_train_big_nonsep, x_test_big_nonsep, y_test_big_nonsep, stochast_train_w)
+
+    print "\nData: big non-separable"
+    print "Training method: batch"
+    train_and_plot(x_train_big_nonsep, y_train_big_nonsep, x_test_big_nonsep, y_test_big_nonsep, batch_train_w)
+
+    ##
+    print "\nData: small non-separable"
+    print "Training method: stochastic"
+    train_and_plot(x_train_small_nonsep, y_train_small_nonsep, x_test_small_nonsep, y_test_small_nonsep, stochast_train_w)
+
+    print "\nData: small non-separable"
+    print "Training method: batch"
+    train_and_plot(x_train_small_nonsep, y_train_small_nonsep, x_test_small_nonsep, y_test_small_nonsep, batch_train_w)
+    '''
 
 main()
