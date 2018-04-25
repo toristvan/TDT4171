@@ -115,8 +115,8 @@ def stochast_train_w(x_train,y_train,learn_rate=0.1,niter=1000):
         x=x_train[xy_index,:]
         y=y_train[xy_index]
         for i in xrange(dim):
-            update_grad = der_Ln(w,x,y,i) # done ### something needs to be done here
-            w[i] = w[i] - (learn_rate*update_grad) # done ### something needs to be done here
+            update_grad = der_Ln(w,x,y,i)
+            w[i] = w[i] - (learn_rate*update_grad)
     return w
 
 def batch_train_w(x_train,y_train,learn_rate=0.1,niter=1000):
@@ -129,11 +129,11 @@ def batch_train_w(x_train,y_train,learn_rate=0.1,niter=1000):
         for i in xrange(dim):
             update_grad=0.0
             for n in xrange(num_n):
-                update_grad+= der_Ln(w,x_train[n],y_train[n],i)# done # something needs to be done here (-logistic_wx(w,x_train[n])+y_train[n])
+                update_grad+= der_Ln(w,x_train[n],y_train[n],i)
             w[i] = w[i] - learn_rate * update_grad/num_n
     return w
 
-def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,niter=100):
+def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,niter=500):
     plt.figure()
     #train data
     data = pd.DataFrame(np.hstack((xtrain,ytrain.reshape(xtrain.shape[0],1))),columns=['x','y','lab'])
@@ -155,11 +155,12 @@ def train_and_plot(xtrain,ytrain,xtest,ytest,training_method,learn_rate=0.1,nite
     print "time=", round(t_end-t_start,5)
     print "iterations=", niter
     print "learn rate=", learn_rate
+    plt.show()
     return w
 
 def main():
     #plot_L_simple()
-    plot_L_simple_grad_descent(1000)
+    #plot_L_simple_grad_descent(1000)
     #gradient_descent(10,1000)
 
     #small nonsep
@@ -185,14 +186,14 @@ def main():
     y_train_big_sep=np.loadtxt("data_big_separable_train.csv", delimiter='\t', usecols=(2, ))
     x_test_big_sep=np.loadtxt("data_big_separable_test.csv", delimiter='\t', usecols=(0,1))
     y_test_big_sep=np.loadtxt("data_big_separable_test.csv", delimiter='\t', usecols=(2, ))
-    '''
+
     #train and plot
     print "\nData: big separable"
     print "Training method: stochastic"
     train_and_plot(x_train_big_sep, y_train_big_sep, x_test_big_sep, y_test_big_sep, stochast_train_w)
-
+    '''
     print "\nData: big separable"
-    print "Training method: batch" #noe som skurrer
+    print "Training method: batch"
     train_and_plot(x_train_big_sep, y_train_big_sep, x_test_big_sep, y_test_big_sep, batch_train_w)
 
     ##
