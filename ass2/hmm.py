@@ -23,7 +23,7 @@ def forward2(T,O_t,O_f,n, prior):
 		alpha=1/(f_next[0]+f_next[1])
 		f_next=alpha*f_next
 		print('P(X_',i+1,')')
-                print(f_next)
+		print(f_next)
 		P=f_next
 	print('Probability of rain after evidence no: ',i+1)
 	return P
