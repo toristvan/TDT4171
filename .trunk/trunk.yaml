@@ -9,3 +9,4 @@ lint:
     - isort@5.9.3
     - markdownlint@0.29.0
     - prettier@2.4.1
+    - pylint@2.11.0
