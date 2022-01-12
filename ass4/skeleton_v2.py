@@ -260,7 +260,6 @@ def main():
         x_test_big_nonsep = np.loadtxt(
             "data_big_nonsep_test.csv", delimiter="\t", usecols=(0, 1)
         )
-        # trunk-ignore(pylint/W0612)
         y_test_big_nonsep = np.loadtxt(
             "data_big_nonsep_test.csv", delimiter="\t", usecols=(2,)
         )
