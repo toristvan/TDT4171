@@ -3,10 +3,24 @@ cli:
   version: 0.5.0-beta
 lint:
   enabled:
+    - pylint@2.11.0
+    # - flake8@3.9.2
+    # - semgrep@0.77.0
     - black-py@21.10b0
-    - flake8@3.9.2
-    - gitleaks@7.6.1
-    - isort@5.9.3
+    - gitleaks@7.6.1 # Detects secrets in source code
+    - isort@5.9.3 # Sorts imports
     - markdownlint@0.29.0
     - prettier@2.4.1
-    - pylint@2.11.0
+  ignore:
+    - linters: [ALL]
+    #   paths:
+    #     # Generated files
+    #     - a/proto/code_pb*
+    #     # Test data
+    #     - b/test_data/**
+    # - linters: [eslint]
+    #   paths:
+    #     - c/run.ts
+  threshold:
+    - linters: [ALL]
+      level: LEVEL_HIGH

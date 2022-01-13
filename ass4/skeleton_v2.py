@@ -119,7 +119,7 @@ def plot_L_simple_grad_descent(niter):
         print("L_simple_min:", loss_simple[i])
     plt.semilogx(learn_rates, loss_simple, "ro")
     plt.grid(True)
-    plt.xlabel("$\eta$")
+    plt.xlabel("$\eta$")  # noqa
     plt.ylabel("$L_{simple}(w)$")
     plt.show()
 
