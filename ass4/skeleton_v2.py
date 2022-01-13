@@ -62,7 +62,7 @@ def plot_L_simple():
     axes.set_xlabel("$w_{1}$")
     axes.set_ylabel("$w_{2}$")
     axes.set_zlabel("$L_{Simple}(w)$")
-    fig
+    NEW_VAR = 0
     plt.show()
 
 
@@ -90,10 +90,10 @@ def grad(w):
 def gradient_descent(learn_rate, niter):
     w_1 = random.uniform(-6.0, 6.0)
     w_2 = random.uniform(-6.0, 6.0)
-    for i in range(niter):
-        L_w1, L_w2 = grad([w_1, w_2])
-        w_1 = w_1 - (learn_rate * L_w1)
-        w_2 = w_2 - (learn_rate * L_w2)
+    for _ in range(niter):
+        l_w1, l_w2 = grad([w_1, w_2])
+        w_1 = w_1 - (learn_rate * l_w1)
+        w_2 = w_2 - (learn_rate * l_w2)
 
     return w_1, w_2
 

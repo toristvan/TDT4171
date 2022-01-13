@@ -23,4 +23,4 @@ lint:
     #     - c/run.ts
   threshold:
     - linters: [ALL]
-      level: LEVEL_HIGH
+      level: LEVEL_LOW
